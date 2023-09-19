@@ -1,10 +1,18 @@
 package api
 
 import (
+	"encoding/json"
+	"fmt"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"net/http"
 	"os"
 )
+
+type Response struct {
+	ChatID    int64  `json:"chat_id"`
+	MessageID int    `json:"message_id"`
+	Method    string `json:"method"`
+}
 
 func BotHandler(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
@@ -21,13 +29,18 @@ func BotHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	var response []byte
+
 	if message := update.Message.PinnedMessage; message != nil {
 		if message.SenderChat.Type == "channel" {
-			unpinMessage := tgbotapi.UnpinChatMessageConfig{
+			data := Response{
+				Method:    "sendMessage",
 				ChatID:    message.Chat.ID,
 				MessageID: message.MessageID,
 			}
-			_, _ = bot.Send(unpinMessage)
+			response, _ = json.Marshal(data)
 		}
 	}
+	w.Header().Add("Content-Type", "application/json")
+	_, _ = fmt.Fprintf(w, string(response))
 }
