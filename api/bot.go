@@ -31,6 +31,9 @@ func BotHandler(w http.ResponseWriter, r *http.Request) {
 
 	var response []byte
 
+	if update.Message == nil {
+		return
+	}
 	if update.Message.PinnedMessage != nil {
 		message := update.Message.PinnedMessage
 		fmt.Printf("%+v", update.Message)
