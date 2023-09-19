@@ -31,7 +31,8 @@ func BotHandler(w http.ResponseWriter, r *http.Request) {
 
 	var response []byte
 
-	if message := update.Message.PinnedMessage; message != nil {
+	if update.Message.PinnedMessage != nil {
+		message := update.Message.PinnedMessage
 		if message.SenderChat.Type == "channel" {
 			data := Response{
 				Method:    "sendMessage",
