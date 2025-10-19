@@ -50,6 +50,7 @@ func main() {
 	})
 	bot.Handle(&telebot.InlineButton{Unique: "check_permissions"}, handleCheckPermissions)
 	bot.Handle(telebot.OnText, handleMessage)
+	bot.Handle(telebot.OnPoll, handleMessage)
 	bot.Handle(telebot.OnMedia, handleMessage)
 	bot.Handle(telebot.OnAddedToGroup, func(c telebot.Context) error {
 		return handleAddedToGroup(c, botUsername)
